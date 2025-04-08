@@ -1,0 +1,30 @@
+# IP Lookup Tool
+
+This is a simple web-based application that allows users to search for IP address information including location, country, and ISP. It also displays the geographical location on a map.
+
+## Features
+
+- Get IP address information (City, Country, ISP)
+- Google Maps integration for location display
+- Copy IP button for quick copy
+- Toggle between Light and Dark themes
+
+## How to Use
+
+1. Open the app in your browser.
+2. Enter an IP address in the input field.
+3. Click on **Lookup** to fetch the data.
+4. Click **Copy IP** to copy the result.
+5. Use **Toggle Theme** to switch between dark/light mode.
+
+## Live Preview
+
+You can host the `index.html` on any static site service (GitHub Pages, Netlify, Vercel) or open it directly in your browser.
+
+## API Used
+
+Data is fetched from [ipapi.co](https://ipapi.co/).
+
+## Author
+
+Made by Westrain.
