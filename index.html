@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IP Lookup</title>
+  <style>
+    :root {
+      --bg-dark: #0d1117;
+      --bg-light: #f0f0f0;
+      --text-dark: #c9d1d9;
+      --text-light: #000000;
+      --primary: #58a6ff;
+      --success: #238636;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      transition: all 0.3s ease;
+    }
+
+    body.light {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    h1 {
+      color: var(--primary);
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 10px;
+      width: 250px;
+    }
+
+    button {
+      margin: 10px 5px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: none;
+      background-color: var(--success);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .info {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    .loading {
+      color: gray;
+    }
+
+    iframe {
+      margin-top: 20px;
+      border: none;
+      width: 90%;
+      max-width: 600px;
+      height: 300px;
+      border-radius: 10px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>IP Lookup Tool</h1>
+  
+  <input type="text" id="ipInput" placeholder="Enter IP address..." />
+  
+  <div class="btn-row">
+    <button onclick="lookupIP()">Lookup</button>
+    <button onclick="copyIP()">Copy IP</button>
+    <button onclick="toggleTheme()">Toggle Theme</button>
+  </div>
+
+  <div class="info">IP Address: <span id="ip" class="loading">-</span></div>
+  <div class="info">City: <span id="city" class="loading">-</span></div>
+  <div class="info">Country: <span id="country" class="loading">-</span></div>
+  <div class="info">ISP: <span id="isp" class="loading">-</span></div>
+
+  <iframe id="map" src=""></iframe>
+
+  <script>
+    function lookupIP() {
+      const ip = document.getElementById('ipInput').value.trim();
+      if (!ip) return alert("Please enter an IP address.");
+
+      fetch(`https://ipapi.co/${ip}/json/`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('ip').textContent = data.ip || 'N/A';
+          document.getElementById('city').textContent = data.city || 'N/A';
+          document.getElementById('country').textContent = data.country_name || 'N/A';
+          document.getElementById('isp').textContent = data.org || 'N/A';
+
+          const lat = data.latitude;
+          const lon = data.longitude;
+
+          if (lat && lon) {
+            document.getElementById('map').src =
+              `https://maps.google.com/maps?q=${lat},${lon}&z=12&output=embed`;
+          } else {
+            document.getElementById('map').src = "";
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Failed to fetch IP data.");
+        });
+    }
+
+    function copyIP() {
+      const ip = document.getElementById('ip').textContent;
+      if (ip && ip !== '-') {
+        navigator.clipboard.writeText(ip);
+        alert("IP address copied!");
+      } else {
+        alert("No IP to copy.");
+      }
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+    }
+  </script>
+</body>
+</html>
